@@ -1,0 +1,18 @@
+name: Subir chart
+on:
+  workflow_dispatch:
+    inputs:
+      MICROSERVICE:
+        description: 'Nombre del microservicio'
+        required: true
+        default: 'backend'
+jobs:
+  subirChart:
+    uses: stemdo-labs/final-project-exercise-ValentinoSanchez00/.github/workflows/SubirChart.yaml@develop
+    secrets: 
+       ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
+       ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
+       ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
+       ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
+    with:  
+      MICROSERVICE: "${{ inputs.MICROSERVICE }}" # Nombre del microservicio
