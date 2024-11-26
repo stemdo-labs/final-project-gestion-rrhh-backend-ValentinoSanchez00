@@ -27,6 +27,12 @@ jobs:
               "tenantId": "${{ secrets.ARM_TENANT_ID }}",
               "subscriptionId": "${{ secrets.ARM_SUBSCRIPTION_ID }}"
             }
+      
+      - name: Install Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
 
       - name: Azure Container Registry Login
         uses: docker/login-action@v3
@@ -39,11 +45,6 @@ jobs:
         run: |
           docker pull containerregistryvsanchez.azurecr.io/imagen-proyecto-${{ inputs.MICROSERVICE }}:0.0.1-SNAPSHOT
 
-      - name: Buildear  Imagen
-        run: |
-          docker build -t containerregistryvsanchez.azurecr.io/imagen-proyecto-${{ inputs.MICROSERVICE }}:latest -f ./Dockerfile .
-
-
       - name: Descargar del harbor el chart
         env:
           HARBOR_PASSWORD: ${{ secrets.HARBOR_PASSWORD }}
@@ -51,11 +52,12 @@ jobs:
           VERSION_CHART: ${{ inputs.VERSION_CHART }}
         run: |
           helm registry login -u vsanchez -p $HARBOR_PASSWORD harbor.codeops.es
-          helm pull ${NAME_CHART}-${VERSION_CHART}.tgz oci://harbor.codeops.es/vsanchez
+          helm pull oci://harbor.codeops.es/vsanchez/${NAME_CHART}:latest
+
       
       - name: Credenciales cluster
         run: |
-          az aks get-credentials --resource-group rg-vsanchez-dvfinlab --name clustervsanche
+          az aks get-credentials --resource-group rg-vsanchez-dvfinlab --name clustervsanchez
 
       - name: Desempaquetar el chart
         run: |
