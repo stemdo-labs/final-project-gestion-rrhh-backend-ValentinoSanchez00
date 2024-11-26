@@ -1,0 +1,34 @@
+name: CI
+on:
+  workflow_dispatch:
+    inputs:
+      VERSION_CHART:
+        description: 'Versión del Chart'
+        required: true
+      MICROSERVICE:
+        description: 'Nombre del microservicio'
+        required: true
+        default: 'backend'
+
+jobs:         
+  subirDocker:
+    uses: stemdo-labs/final-project-exercise-ValentinoSanchez00/.github/workflows/SubirDockerfiles.yaml@develop
+    secrets: 
+       ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
+       ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
+       ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
+       ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
+    with: 
+      VERSION_CHART: "${{ inputs.VERSION_CHART }}" # Versión del Chart
+      MICROSERVICE: "${{ inputs.MICROSERVICE }}" # Nombre del microservicio 
+     
+      
+  subirCharts:
+    uses: stemdo-labs/final-project-exercise-ValentinoSanchez00/.github/workflows/subirCharts.yaml@develop
+    secrets:
+      TOKEN_GITHUB: "${{ secrets.TOKEN_GITHUB }}"
+      HARBOR_PASSWORD: "${{ secrets.HARBOR_PASSWORD }}"
+    with:
+      VERSION_CHART: "${{ inputs.VERSION_CHART }}" # Versión del Chart
+      MICROSERVICE: "${{ inputs.MICROSERVICE }}" # Nombre del microservicio
+
