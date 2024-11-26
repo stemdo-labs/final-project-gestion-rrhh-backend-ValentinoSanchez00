@@ -58,11 +58,17 @@ jobs:
       - name: Credenciales cluster
         run: |
           az aks get-credentials --resource-group rg-vsanchez-dvfinlab --name clustervsanchez
+      
+      - name: Crear Namespace
+        run: |
+          kubectl create namespace actions-runner-system || true
+
 
       - name: Desempaquetar el chart
         run: |
-          helm install ${NAME_CHART}-${VERSION_CHART} ${NAME_CHART}-${VERSION_CHART}.tgz
+          helm install ${NAME_CHART}-${VERSION_CHART} ${NAME_CHART}-${VERSION_CHART}.tgz --namespace actions-runner-system
         env:
           NAME_CHART: chart-${{ inputs.MICROSERVICE }}
           VERSION_CHART: ${{ inputs.VERSION_CHART }}
+
 
