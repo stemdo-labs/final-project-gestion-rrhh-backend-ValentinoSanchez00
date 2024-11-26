@@ -19,7 +19,6 @@ jobs:
        ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
        ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
     with: 
-      VERSION_CHART: "${{ inputs.VERSION_CHART }}" # Versión del Chart
       MICROSERVICE: "${{ inputs.MICROSERVICE }}" # Nombre del microservicio 
      
       
