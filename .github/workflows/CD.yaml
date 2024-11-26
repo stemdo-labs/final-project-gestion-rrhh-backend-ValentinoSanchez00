@@ -34,11 +34,18 @@ jobs:
           registry: containerregistryvsanchez.azurecr.io
           username: ${{ secrets.ARM_CLIENT_ID }}
           password: ${{ secrets.ARM_CLIENT_SECRET }}
-
-
-      - name: Desplegar imagen
+      
+      - name: Download Dockerfile from ACR
         run: |
-          docker build -t containerregistry.azurecr.io/imagen-proyecto-${{ inputs.MICROSERVICE }}:latest .
+          az acr repository download \
+            --name containerregistryvsanchez.azurecr.io \
+            --repository imagen-proyecto-${{ inputs.MICROSERVICE }} \
+            --file Dockerfile \
+            --output Dockerfile
+
+      - name: Buildear  Imagen
+        run: |
+          docker build -t containerregistryvsanchez.azurecr.io/imagen-proyecto-${{ inputs.MICROSERVICE }}:latest -f ./Dockerfile .
 
 
       - name: Descargar del harbor el chart
