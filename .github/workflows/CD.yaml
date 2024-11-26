@@ -37,7 +37,7 @@ jobs:
       
       - name: Download Dockerfile from ACR
         run: |
-          docker pull containerregistryvsanchez.azurecr.io/imagen-proyecto-${{ inputs.MICROSERVICE }}
+          docker pull containerregistryvsanchez.azurecr.io/imagen-proyecto-${{ inputs.MICROSERVICE }}:0.0.1-SNAPSHOT
 
       - name: Buildear  Imagen
         run: |
