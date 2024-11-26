@@ -68,7 +68,7 @@ jobs:
 
       - name : secreto
         run: |
-          kubectl create secret docker-registry acr-secret --docker-server=acajascr.azurecr.io --docker-username=${{ secrets.ARM_CLIENT_ID }} --docker-password=${{ secrets.ARM_CLIENT_SECRET }} -n actions-runner-system
+          kubectl create secret docker-registry acr-secret --docker-server=containerregistryvsanchez.azurecr.io --docker-username=${{ secrets.ARM_CLIENT_ID }} --docker-password=${{ secrets.ARM_CLIENT_SECRET }} -n actions-runner-system
 
       - name: Desempaquetar el chart
         run: |
