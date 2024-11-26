@@ -48,4 +48,16 @@ jobs:
           VERSION_CHART: ${{ inputs.VERSION_CHART }}
         run: |
           helm registry login -u vsanchez -p $HARBOR_PASSWORD harbor.codeops.es
-          sudo helm pull ${NAME_CHART}-${VERSION_CHART}.tgz oci://harbor.codeops.es/vsanchez
+          helm pull ${NAME_CHART}-${VERSION_CHART}.tgz oci://harbor.codeops.es/vsanchez
+      
+      - name: Credenciales cluster
+        run: |
+          az aks get-credentials --resource-group rg-vsanchez-dvfinlab --name clustervsanche
+
+      - name: Desempaquetar el chart
+        run: |
+          helm install ${NAME_CHART}-${VERSION_CHART} ${NAME_CHART}-${VERSION_CHART}.tgz
+        env:
+          NAME_CHART: chart-${{ inputs.MICROSERVICE }}
+          VERSION_CHART: ${{ inputs.VERSION_CHART }}
+
