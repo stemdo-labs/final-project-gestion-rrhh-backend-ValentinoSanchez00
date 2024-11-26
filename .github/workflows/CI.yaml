@@ -5,7 +5,7 @@ on:
       MICROSERVICE:
         description: 'Nombre del microservicio'
         required: true
-        default: 'frontend'
+        default: 'backend'
 
 jobs:         
   subirDocker:
