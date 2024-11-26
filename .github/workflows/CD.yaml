@@ -52,7 +52,7 @@ jobs:
           VERSION_CHART: ${{ inputs.VERSION_CHART }}
         run: |
           helm registry login -u vsanchez -p $HARBOR_PASSWORD harbor.codeops.es
-          helm pull oci://harbor.codeops.es/vsanchez/${NAME_CHART}:latest
+          helm pull oci://harbor.codeops.es/vsanchez/${NAME_CHART}:0.1.0
 
       
       - name: Credenciales cluster
