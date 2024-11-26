@@ -57,7 +57,7 @@ jobs:
       
       - name: Credenciales cluster
         run: |
-          az aks get-credentials --resource-group rg-vsanchez-dvfinlab --name clustervsanche
+          az aks get-credentials --resource-group rg-vsanchez-dvfinlab --name clustervsanchez
 
       - name: Desempaquetar el chart
         run: |
