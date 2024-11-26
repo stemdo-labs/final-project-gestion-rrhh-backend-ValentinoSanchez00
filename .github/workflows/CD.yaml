@@ -39,11 +39,6 @@ jobs:
         run: |
           docker pull containerregistryvsanchez.azurecr.io/imagen-proyecto-${{ inputs.MICROSERVICE }}:0.0.1-SNAPSHOT
 
-      - name: Buildear  Imagen
-        run: |
-          docker build -t containerregistryvsanchez.azurecr.io/imagen-proyecto-${{ inputs.MICROSERVICE }}:latest -f ./Dockerfile .
-
-
       - name: Descargar del harbor el chart
         env:
           HARBOR_PASSWORD: ${{ secrets.HARBOR_PASSWORD }}
