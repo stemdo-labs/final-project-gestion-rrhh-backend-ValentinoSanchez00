@@ -49,7 +49,7 @@ jobs:
         run: |
           echo "URL: oci://harbor.codeops.es/vsanchez/${NAME_CHART}:${VERSION_CHART}"
           helm registry login -u vsanchez -p $HARBOR_PASSWORD harbor.codeops.es
-          helm pull oci://harbor.codeops.es/vsanchez/${NAME_CHART}:${VERSION_CHART}
+          helm pull oci://harbor.codeops.es/vsanchez/${NAME_CHART} --version ${VERSION_CHART}
 
       - name: Instalar kubectl
         run: |
