@@ -83,6 +83,9 @@ jobs:
             echo "El secreto acr-secret ya existe. Skipping..."
           fi
       
+      - name: ls
+        run: |
+          ls 
 
       - name: Desempaquetar el chart
         run: |
