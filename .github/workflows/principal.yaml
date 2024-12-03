@@ -47,6 +47,7 @@ jobs:
           NAME_CHART: chart-${{ inputs.MICROSERVICE }}
           VERSION_CHART: ${{ inputs.VERSION_CHART }}
         run: |
+          echo "URL: oci://harbor.codeops.es/vsanchez/${NAME_CHART}:${VERSION_CHART}"
           helm registry login -u vsanchez -p $HARBOR_PASSWORD harbor.codeops.es
           helm pull oci://harbor.codeops.es/vsanchez/${NAME_CHART}:${VERSION_CHART}
 
