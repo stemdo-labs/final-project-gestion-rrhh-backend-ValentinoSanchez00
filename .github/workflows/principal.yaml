@@ -68,11 +68,6 @@ jobs:
           az aks get-credentials --resource-group final-project-common --name aksbootcampwe01 --overwrite-existing
           kubelogin convert-kubeconfig -l azurecli
 
-      
-      - name: Crear Namespace
-        run: |
-          kubectl create namespace ns-vsanchez || true
-
       - name: Crear secreto si no existe
         run: |
           if ! kubectl get secret acr-secret -n ns-vsanchez &>/dev/null; then
