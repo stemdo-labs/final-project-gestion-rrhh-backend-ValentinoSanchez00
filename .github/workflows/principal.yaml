@@ -59,16 +59,12 @@ jobs:
 
       - name: instalar brew
         run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.bashrc
-          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.profile
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          sudo apt-get install build-essential
-          brew install gcc
-
-
-      - name: Instalar kubelogin
-        run: |
+          sudo apt install build-essential curl file git
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+          test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
+          test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+          echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile
+          brew search kubelogin
           brew install kubelogin
           
       - name: Credenciales cluster
@@ -94,7 +90,7 @@ jobs:
           fi
       - name: Desempaquetar el chart
         run: |
-          helm install ${NAME_CHART}-${VERSION_CHART} ${NAME_CHART}-${VERSION_CHART}.tgz --namespace ns-vsanchez
+          helm upgrade --install ${NAME_CHART}-${VERSION_CHART} ${NAME_CHART}-${VERSION_CHART}.tgz --namespace ns-vsanchez
         env:
           NAME_CHART: chart-${{ inputs.MICROSERVICE }}
           VERSION_CHART: ${{ inputs.VERSION_CHART }}
