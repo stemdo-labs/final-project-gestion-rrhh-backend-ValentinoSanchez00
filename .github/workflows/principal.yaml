@@ -80,7 +80,7 @@ jobs:
               --docker-server=containerregistryvsanchez.azurecr.io \
               --docker-username=${{ secrets.ARM_CLIENT_ID }} \
               --docker-password=${{ secrets.ARM_CLIENT_SECRET }} \
-              -n ns-vsanchez
+              --namespace=ns-vsanchez
             echo "Secreto creado exitosamente."
           else
             echo "El secreto acr-secret ya existe. Skipping..."
