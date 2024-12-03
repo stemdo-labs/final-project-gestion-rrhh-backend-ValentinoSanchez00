@@ -1,4 +1,4 @@
-name: Subir chart
+name: Subir Chart
 on:
   workflow_dispatch:
     inputs:
@@ -8,7 +8,8 @@ on:
         default: 'backend'
 jobs:
   subirChart:
-    uses: stemdo-labs/final-project-exercise-ValentinoSanchez00/.github/workflows/SubirChart.yaml@main
+    uses: stemdo-labs/final-project-exercise-ValentinoSanchez00/.github/workflows/SubirCharts.yaml@main
+
     secrets: 
        ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
        ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
