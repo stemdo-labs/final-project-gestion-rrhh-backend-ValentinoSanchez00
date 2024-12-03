@@ -16,7 +16,7 @@ jobs:
        ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
        ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
     with:  
-      MICROSERVICE: "${{ inputs.MICROSERVICE }}" # Nombre del microservicio 
+      MICROSERVICE: "${{ inputs.MICROSERVICE }}"  
      
       
   

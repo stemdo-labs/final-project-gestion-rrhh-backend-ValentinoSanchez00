@@ -12,7 +12,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: runner-stemdo-labs
+    runs-on: ubuntu-latest
     steps:
       - name: Install Azure
         run: |
@@ -48,12 +48,12 @@ jobs:
           VERSION_CHART: ${{ inputs.VERSION_CHART }}
         run: |
           helm registry login -u vsanchez -p $HARBOR_PASSWORD harbor.codeops.es
-          helm pull oci://harbor.codeops.es/vsanchez/${NAME_CHART}
+          helm pull oci://harbor.codeops.es/vsanchez/${NAME_CHART}:${VERSION_CHART}
 
       
       - name: Credenciales cluster
         run: |
-          az aks get-credentials --resource-group rg-vsanchez-dvfinlab --name clustervsanchez
+          az aks get-credentials --resource-group final-project-common --name aksbootcampwe01
 
       - name: Instalar kubectl
         run: |
@@ -64,23 +64,23 @@ jobs:
       
       - name: Crear Namespace
         run: |
-          kubectl create namespace actions-runner-system || true
+          kubectl create namespace ns-vsanchez || true
 
       - name: Crear secreto si no existe
         run: |
-          if ! kubectl get secret acr-secret -n actions-runner-system &>/dev/null; then
+          if ! kubectl get secret acr-secret -n ns-vsanchez &>/dev/null; then
             kubectl create secret docker-registry acr-secret \
               --docker-server=containerregistryvsanchez.azurecr.io \
               --docker-username=${{ secrets.ARM_CLIENT_ID }} \
               --docker-password=${{ secrets.ARM_CLIENT_SECRET }} \
-              -n actions-runner-system
+              -n ns-vsanchez
             echo "Secreto creado exitosamente."
           else
             echo "El secreto acr-secret ya existe. Skipping..."
           fi
       - name: Desempaquetar el chart
         run: |
-          helm install ${NAME_CHART}-${VERSION_CHART} ${NAME_CHART}-${VERSION_CHART}.tgz --namespace actions-runner-system
+          helm install ${NAME_CHART}-${VERSION_CHART} ${NAME_CHART}-${VERSION_CHART}.tgz --namespace ns-vsanchez
         env:
           NAME_CHART: chart-${{ inputs.MICROSERVICE }}
           VERSION_CHART: ${{ inputs.VERSION_CHART }}
