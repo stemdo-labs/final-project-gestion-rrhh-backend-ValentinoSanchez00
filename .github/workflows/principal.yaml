@@ -50,16 +50,23 @@ jobs:
           helm registry login -u vsanchez -p $HARBOR_PASSWORD harbor.codeops.es
           helm pull oci://harbor.codeops.es/vsanchez/${NAME_CHART}:${VERSION_CHART}
 
-      
-      - name: Credenciales cluster
-        run: |
-          az aks get-credentials --resource-group final-project-common --name aksbootcampwe01
-
       - name: Instalar kubectl
         run: |
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
+
+      - name: instalar brew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+      - name: Instalar kubelogin
+        run: |
+          brew install kubelogin
+          
+      - name: Credenciales cluster
+        run: |
+          az aks get-credentials --resource-group final-project-common --name aksbootcampwe01
 
       
       - name: Crear Namespace
