@@ -80,9 +80,12 @@ jobs:
           else
             echo "El secreto acr-secret ya existe. Skipping..."
           fi
+      - name: Checkout 
+        uses: actions/checkout@v3
+
       - name: Desempaquetar el chart
         run: |
-          helm upgrade --install ${NAME_CHART}-${VERSION_CHART} ${NAME_CHART}-${VERSION_CHART}.tgz --namespace ns-vsanchez
+          helm upgrade --install ${NAME_CHART}-${VERSION_CHART} ${NAME_CHART}-${VERSION_CHART}.tgz --namespace ns-vsanchez -f values.yaml
         env:
           NAME_CHART: chart-${{ inputs.MICROSERVICE }}
           VERSION_CHART: ${{ inputs.VERSION_CHART }}
