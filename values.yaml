@@ -16,5 +16,5 @@ backend:
     SPRING_DB_USER: "vsanchez"
     SPRING_DB_PASSWORD: "mypassword"
   service:
-    port: 8081
+    port: 8080
     type: ClusterIP
