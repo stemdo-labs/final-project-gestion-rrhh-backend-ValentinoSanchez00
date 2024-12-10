@@ -18,3 +18,4 @@ backend:
   service:
     port: 8080
     type: ClusterIP
+
