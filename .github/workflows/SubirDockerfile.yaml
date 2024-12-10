@@ -1,23 +1,37 @@
 name: Subir Dockerfile
-on:
-  workflow_dispatch:
-    inputs:
-      MICROSERVICE:
-        description: 'Nombre del microservicio'
-        required: true
-        default: 'backend'
 
-jobs:         
+on:
+  push:
+    branches:
+      - main
+      - develop
+      
+jobs:
   subirDocker:
     uses: stemdo-labs/final-project-exercise-ValentinoSanchez00/.github/workflows/SubirDockerfiles.yaml@main
-    secrets: 
-       ARM_CLIENT_ID: "${{ secrets.ARM_CLIENT_ID }}"
-       ARM_CLIENT_SECRET: "${{ secrets.ARM_CLIENT_SECRET }}"
-       ARM_TENANT_ID: "${{ secrets.ARM_TENANT_ID }}"
-       ARM_SUBSCRIPTION_ID: "${{ secrets.ARM_SUBSCRIPTION_ID }}"
-    with:  
-      MICROSERVICE: "${{ inputs.MICROSERVICE }}"  
-     
-      
-  
+    with:
+      MICROSERVICE: "backend"
+      DB_HOST: ${{ vars.DB_HOST }}
+      DB_PORT: ${{ vars.DB_PORT }}
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
+  flujoCD:
+    needs: subirDocker
+    uses: ./.github/workflows/principal.yaml
+    with:
+      MICROSERVICE: "backend"
+      VERSION_CHART: "0.2.1"
+      ENVIROMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'develop' }}
+    secrets:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      HARBOR_PASSWORD : ${{ secrets.HARBOR_PASSWORD }}
