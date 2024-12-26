@@ -59,7 +59,7 @@ pipeline {
         stage('Instalar Herramientas') {
             steps {
                 sh """
-                curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+                curl -sL https://aka.ms/InstallAzureCLIDeb | bash
                 curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
                 ibmcloud plugin install container-registry -r 'IBM Cloud'
                 ibmcloud plugin install container-service -r 'IBM Cloud'
