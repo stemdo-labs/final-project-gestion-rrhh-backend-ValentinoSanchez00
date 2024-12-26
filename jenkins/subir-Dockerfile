@@ -30,18 +30,24 @@ pipeline {
 
                     if (isWritable == 'writable') {
                         sh """
-                        curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+                        # Instalar Azure CLI en el directorio de usuario
+                        mkdir -p ~/bin
+                        curl -sL https://aka.ms/InstallAzureCLIDeb -o azure-cli.deb
+                        dpkg -x azure-cli.deb ~/azure-cli
+                        export PATH=~/azure-cli/bin:$PATH
+
+                        # Instalar IBM Cloud CLI en el directorio de usuario
                         curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
                         ibmcloud plugin install container-registry -r 'IBM Cloud'
                         ibmcloud plugin install container-service -r 'IBM Cloud'
-                        apt update && apt upgrade -y
                         """
                     } else {
-                        echo "El sistema de archivos es de solo lectura. Revisar configuración."
+                        echo "Sistema de archivos de solo lectura. Revisar configuración."
                     }
                 }
             }
         }
+
         stage('Test Frontend') {
             when {
                 allOf {
