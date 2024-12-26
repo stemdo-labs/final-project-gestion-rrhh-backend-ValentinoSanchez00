@@ -6,6 +6,28 @@ pipeline {
     parameters {
         string(name: 'MICROSERVICE', defaultValue: 'backend', description: 'Nombre del microservicio (frontend/backend)')
     }
+    stage('Instalar Herramientas') {
+    steps {
+        script {
+            def isWritable = sh(
+                script: 'touch /tmp/test && echo "writable" || echo "readonly"',
+                returnStdout: true
+            ).trim()
+
+            if (isWritable == 'writable') {
+                sh """
+                curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+                curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
+                ibmcloud plugin install container-registry -r 'IBM Cloud'
+                ibmcloud plugin install container-service -r 'IBM Cloud'
+                apt update && apt upgrade -y
+                """
+            } else {
+                echo "El sistema de archivos es de solo lectura. Revisar configuración."
+            }
+        }
+    }
+}
     stages {
         stage('Determinar Ambiente') {
             steps {
@@ -54,17 +76,6 @@ pipeline {
                     """
                     sh "cat ${confPath}"
                 }
-            }
-        }
-        stage('Instalar Herramientas') {
-            steps {
-                sh """
-                curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-                curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
-                ibmcloud plugin install container-registry -r 'IBM Cloud'
-                ibmcloud plugin install container-service -r 'IBM Cloud'
-                apt update && apt upgrade -y
-                """
             }
         }
         stage('Login IBM Cloud') {
