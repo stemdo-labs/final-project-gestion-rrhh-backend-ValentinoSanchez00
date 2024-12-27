@@ -10,25 +10,21 @@ pipeline {
     }
     parameters {
         string(name: 'MICROSERVICE', defaultValue: 'backend', description: 'Nombre del microservicio (frontend/backend)')
+        string(name: 'ENVIRONMENT', defaultValue: 'develop', description: 'Ambiente de despliegue (develop/production)')
     }
     stages {
-        stage('Determinar Ambiente') {
+        stage('Mostrar Configuración') {
             steps {
-                script {
-                    if (env.BRANCH_NAME == 'main') {
-                        env.ENVIRONMENT = 'production'
-                    } else {
-                        env.ENVIRONMENT = 'develop'
-                    }
-                    echo "Ambiente configurado: ${env.ENVIRONMENT}"
-                }
+                echo "Configuración elegida:"
+                echo "Microservicio: ${params.MICROSERVICE}"
+                echo "Ambiente: ${params.ENVIRONMENT}"
             }
         }
         stage('Test Frontend') {
             when {
                 allOf {
                     expression { params.MICROSERVICE == 'frontend' }
-                    branch 'main'
+                    expression { params.ENVIRONMENT == 'production' }
                 }
             }
             steps {
@@ -102,20 +98,20 @@ pipeline {
         }
         stage('Construir Imagen') {
             steps {
-                sh "docker build -t imagen-proyecto-${params.MICROSERVICE}-${env.ENVIRONMENT} ."
+                sh "docker build -t imagen-proyecto-${params.MICROSERVICE}-${params.ENVIRONMENT} ."
             }
         }
         stage('Taggear Imagen') {
             steps {
                 sh """
-                docker tag imagen-proyecto-${params.MICROSERVICE}-${env.ENVIRONMENT} uk.icr.io/cr-vsanchez/imagen-proyecto-${params.MICROSERVICE}-${env.ENVIRONMENT}:${env.VERSION}
+                docker tag imagen-proyecto-${params.MICROSERVICE}-${params.ENVIRONMENT} uk.icr.io/cr-vsanchez/imagen-proyecto-${params.MICROSERVICE}-${params.ENVIRONMENT}:${env.VERSION}
                 """
             }
         }
         stage('Pushear Imagen') {
             steps {
                 sh """
-                docker push uk.icr.io/cr-vsanchez/imagen-proyecto-${params.MICROSERVICE}-${env.ENVIRONMENT}:${env.VERSION}
+                docker push uk.icr.io/cr-vsanchez/imagen-proyecto-${params.MICROSERVICE}-${params.ENVIRONMENT}:${env.VERSION}
                 """
             }
         }
