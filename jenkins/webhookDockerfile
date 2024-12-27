@@ -9,11 +9,14 @@ pipeline {
         stage('Determine Branch from Webhook') {
             steps {
                 script {
-                    BRANCH_NAME = env.BRANCH_NAME ?: sh(
-                        script: "git rev-parse --abbrev-ref HEAD",
-                        returnStdout: true
-                    ).trim()
-
+                    if (env.GIT_BRANCH) {
+                        BRANCH_NAME = env.GIT_BRANCH.replace('refs/heads/', '')
+                    } else {
+                        BRANCH_NAME = sh(
+                            script: "git rev-parse --abbrev-ref HEAD",
+                            returnStdout: true
+                        ).trim()
+                    }
                     echo "Rama detectada: ${BRANCH_NAME}"
 
                     if (BRANCH_NAME == 'origin/main' || BRANCH_NAME.startsWith('pr')) {
