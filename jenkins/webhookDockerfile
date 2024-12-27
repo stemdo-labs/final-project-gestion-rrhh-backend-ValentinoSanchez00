@@ -1,40 +1,62 @@
 pipeline {
     agent any
-    triggers {
-        pollSCM('') 
-    }
     environment {
-        MICROSERVICE = 'backend' // Puedes ajustar este valor según sea necesario
-        ENVIRONMENT = '' 
+        MICROSERVICE = 'backend' // Define el microservicio, puedes cambiarlo
+        ENVIRONMENT = ''         // Inicializa el entorno vacío
+        BRANCH_NAME = ''         // Captura el nombre de la rama
     }
     stages {
-        stage('Determine Environment') {
+        stage('Determine Branch from Webhook') {
             steps {
                 script {
-                    // Detecta la rama y asigna el valor adecuado a ENVIRONMENT
-                    if (env.BRANCH_NAME == 'main' || env.BRANCH_NAME.startsWith('pr')) {
+                    // Captura la rama desde el webhook o git
+                    if (env.GIT_BRANCH) {
+                        BRANCH_NAME = env.GIT_BRANCH.replace('refs/heads/', '')
+                    } else {
+                        // Si no existe env.GIT_BRANCH, se obtiene del repo local
+                        BRANCH_NAME = sh(
+                            script: "git rev-parse --abbrev-ref HEAD",
+                            returnStdout: true
+                        ).trim()
+                    }
+
+                    echo "Rama detectada: ${BRANCH_NAME}"
+
+                    // Asigna el entorno según la rama detectada
+                    if (BRANCH_NAME == 'main' || BRANCH_NAME.startsWith('pr')) {
                         ENVIRONMENT = 'production'
-                    } else if (env.BRANCH_NAME == 'develop') {
+                    } else if (BRANCH_NAME == 'develop') {
                         ENVIRONMENT = 'develop'
                     } else {
-                        error "Push desde rama no soportada: ${env.BRANCH_NAME}. No se realizará ninguna acción."
+                        error "Push desde rama no soportada: ${BRANCH_NAME}. No se realizará ninguna acción."
                     }
+
+                    echo "Entorno configurado: ${ENVIRONMENT}"
                 }
             }
         }
         stage('Trigger SubirDFB-Vsanchez') {
             when {
-                expression { ENVIRONMENT != '' } 
+                expression { ENVIRONMENT != '' } // Solo ejecuta si el entorno está configurado
             }
             steps {
                 script {
-                    build job: 'SubirDFB-Vsanchez', 
+                    // Llama a otra pipeline y pasa los parámetros
+                    build job: 'SubirDFB-Vsanchez',
                     parameters: [
                         string(name: 'MICROSERVICE', value: MICROSERVICE),
                         string(name: 'ENVIRONMENT', value: ENVIRONMENT)
                     ]
                 }
             }
+        }
+    }
+    post {
+        success {
+            echo "Pipeline ejecutada exitosamente en la rama ${BRANCH_NAME} con entorno ${ENVIRONMENT}."
+        }
+        failure {
+            echo "Error en la ejecución. Revisa la configuración de la rama: ${BRANCH_NAME}."
         }
     }
 }
