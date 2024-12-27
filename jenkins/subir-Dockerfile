@@ -23,7 +23,7 @@ pipeline {
                 }
             }
             steps {
-                echo "Configurando y ejecutando linter"
+                echo "Configurando y ejecutando linte"
                 sh """
                 npm install eslint --save-dev
                 npx eslint --init
