@@ -1,31 +1,24 @@
 pipeline {
     agent any
     environment {
-        MICROSERVICE = 'backend' // Define el microservicio, puedes cambiarlo
-        ENVIRONMENT = ''         // Inicializa el entorno vacío
-        BRANCH_NAME = ''         // Captura el nombre de la rama
+        MICROSERVICE = 'backend'
+        ENVIRONMENT = ''
+        BRANCH_NAME = ''
     }
     stages {
         stage('Determine Branch from Webhook') {
             steps {
                 script {
-                    // Captura la rama desde el webhook o git
-                    if (env.GIT_BRANCH) {
-                        BRANCH_NAME = env.GIT_BRANCH.replace('refs/heads/', '')
-                    } else {
-                        // Si no existe env.GIT_BRANCH, se obtiene del repo local
-                        BRANCH_NAME = sh(
-                            script: "git rev-parse --abbrev-ref HEAD",
-                            returnStdout: true
-                        ).trim()
-                    }
+                    BRANCH_NAME = env.BRANCH_NAME ?: sh(
+                        script: "git rev-parse --abbrev-ref HEAD",
+                        returnStdout: true
+                    ).trim()
 
                     echo "Rama detectada: ${BRANCH_NAME}"
 
-                    // Asigna el entorno según la rama detectada
-                    if (BRANCH_NAME == 'origin/main' || BRANCH_NAME.startsWith('pr')) {
+                    if (BRANCH_NAME == 'main' || BRANCH_NAME.startsWith('pr')) {
                         ENVIRONMENT = 'production'
-                    } else if (BRANCH_NAME == 'origin/develop') {
+                    } else if (BRANCH_NAME == 'develop') {
                         ENVIRONMENT = 'develop'
                     } else {
                         error "Push desde rama no soportada: ${BRANCH_NAME}. No se realizará ninguna acción."
@@ -37,14 +30,21 @@ pipeline {
         }
         stage('Trigger SubirDFB-Vsanchez') {
             when {
-                expression { ENVIRONMENT != '' }
-                changeset "**/pom.xml"
-                changeset "**/Dockerfile"
-                changeset "**/jenkins/subir-Dockerfile"
+                expression {
+                    currentBuild.changeSets.any { cs ->
+                        cs.items.any { item ->
+                            item.affectedFiles.any { file ->
+                                file.path.endsWith('pom.xml') ||
+                                file.path.endsWith('Dockerfile') ||
+                                file.path.endsWith('jenkins/subir-Dockerfile')
+                            }
+                        }
+                    } && ENVIRONMENT != ''
+                }
             }
             steps {
                 script {
-                    // Llama a otra pipeline y pasa los parámetros
+                    echo "Ejecutando SubirDFB-Vsanchez con entorno ${ENVIRONMENT}..."
                     build job: 'SubirDFB-Vsanchez',
                     parameters: [
                         string(name: 'MICROSERVICE', value: MICROSERVICE),
