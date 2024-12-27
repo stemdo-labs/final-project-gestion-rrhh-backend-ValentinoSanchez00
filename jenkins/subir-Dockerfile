@@ -25,6 +25,7 @@ pipeline {
             steps {
                 echo "Configurando y ejecutando linte"
                 sh """
+                whoami
                 npm install eslint --save-dev
                 npx eslint --init
                 npx eslint . --ext .js,.jsx,.ts,.tsx
