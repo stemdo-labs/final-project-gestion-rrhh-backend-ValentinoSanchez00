@@ -16,9 +16,9 @@ pipeline {
 
                     echo "Rama detectada: ${BRANCH_NAME}"
 
-                    if (BRANCH_NAME == 'main' || BRANCH_NAME.startsWith('pr')) {
+                    if (BRANCH_NAME == 'origin/main' || BRANCH_NAME.startsWith('pr')) {
                         ENVIRONMENT = 'production'
-                    } else if (BRANCH_NAME == 'develop') {
+                    } else if (BRANCH_NAME == 'origin/develop') {
                         ENVIRONMENT = 'develop'
                     } else {
                         error "Push desde rama no soportada: ${BRANCH_NAME}. No se realizará ninguna acción."
@@ -31,6 +31,7 @@ pipeline {
         stage('Trigger SubirDFB-Vsanchez') {
             when {
                 expression {
+                    
                     currentBuild.changeSets.any { cs ->
                         cs.items.any { item ->
                             item.affectedFiles.any { file ->
