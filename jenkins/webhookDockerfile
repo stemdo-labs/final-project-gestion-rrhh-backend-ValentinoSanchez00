@@ -37,7 +37,10 @@ pipeline {
         }
         stage('Trigger SubirDFB-Vsanchez') {
             when {
-                expression { ENVIRONMENT != '' } // Solo ejecuta si el entorno está configurado
+                expression { ENVIRONMENT != '' }
+                changeset "**/pom.xml"
+                changeset "**/Dockerfile"
+                changeset "**/jenkins/subir-Dockerfile"
             }
             steps {
                 script {

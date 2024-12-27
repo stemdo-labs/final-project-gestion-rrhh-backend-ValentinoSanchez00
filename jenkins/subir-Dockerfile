@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        kubernetes {
-            label 'docker'  // Usamos el agente con Docker preinstalado
-            defaultContainer 'docker'
-        }
-    }   
+    agent any  
     environment {
         APIKEY = credentials('IBM_CLOUD_API_KEY_VSANCHEZ') // Define la credencial en Jenkins previamente
     }
