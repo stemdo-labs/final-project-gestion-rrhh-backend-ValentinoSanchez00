@@ -86,8 +86,8 @@ pipeline {
                 curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
                 ibmcloud plugin install container-registry -r 'IBM Cloud'
                 ibmcloud plugin install container-service -r 'IBM Cloud'
+                apt-get install -y libxml2-utils
                 apt update && apt upgrade -y
-                sudo apt-get install -y libxml2-utils
                 """
             }
         }
