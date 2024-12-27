@@ -23,9 +23,9 @@ pipeline {
                     echo "Rama detectada: ${BRANCH_NAME}"
 
                     // Asigna el entorno según la rama detectada
-                    if (BRANCH_NAME == 'main' || BRANCH_NAME.startsWith('pr')) {
+                    if (BRANCH_NAME == 'origin/main' || BRANCH_NAME.startsWith('pr')) {
                         ENVIRONMENT = 'production'
-                    } else if (BRANCH_NAME == 'develop') {
+                    } else if (BRANCH_NAME == 'origin/develop') {
                         ENVIRONMENT = 'develop'
                     } else {
                         error "Push desde rama no soportada: ${BRANCH_NAME}. No se realizará ninguna acción."
