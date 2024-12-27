@@ -25,7 +25,6 @@ pipeline {
             steps {
                 echo "Configurando y ejecutando linte"
                 sh """
-                whoami
                 npm install eslint --save-dev
                 npx eslint --init
                 npx eslint . --ext .js,.jsx,.ts,.tsx
@@ -57,6 +56,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                        whoami
                         # Add Docker's official GPG key:
                         apt-get update
                         apt-get install -y ca-certificates curl
