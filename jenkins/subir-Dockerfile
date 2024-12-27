@@ -31,7 +31,7 @@ pipeline {
                 """
             }
         }
-        stage('Configurar default.con') {
+        stage('Configurar default.conf') {
             when {
                 expression { params.MICROSERVICE == 'frontend' }
             }
