@@ -110,15 +110,14 @@ pipeline {
                     sh 'ls -l'
                     sh 'cat pom.xml | head -n 20'
 
-                    // Determinar la versión dependiendo del microservicio
+                    
                     if (params.MICROSERVICE == 'frontend') {
                         // Extraer versión del archivo package.json para frontend
                         env.VERSION = sh(
                             script: "node -pe 'require(\"./package.json\").version'",
                             returnStdout: true
                         ).trim()
-                    } else if (params.MICROSERVICE == 'backend') {
-                        // Extraer versión del archivo pom.xml para backend
+                    } else if (params.MICROSERVICE == 'backend'){
                         echo " extrayendo versión del archivo pom.xml"
                         env.VERSION = sh(
                             script: """
