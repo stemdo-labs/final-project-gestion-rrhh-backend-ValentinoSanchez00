@@ -104,7 +104,8 @@ pipeline {
         stage('Login Docker') {
             steps {
                 sh """
-                systemctl status docker
+                docker --version
+                docker login -u cr-vsanchez -p ${APIKEY} uk.icr.io
 
                 """
             }
