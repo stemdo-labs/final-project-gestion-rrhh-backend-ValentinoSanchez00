@@ -113,23 +113,24 @@ pipeline {
             }
         }
         stage('Extraer Versión') {
-            steps {
-                script {
-                    if (params.MICROSERVICE == 'frontend') {
-                        env.VERSION = sh(
-                            script: "node -pe 'require(\"./package.json\").version'",
-                            returnStdout: true
-                        ).trim()
-                    } else if (params.MICROSERVICE == 'backend') {
-                        env.VERSION = sh(
-                            script: "awk '/<artifactId>rh<\\/artifactId>/,/<\\/project>/{if(\\\$0 ~ /<version>/){print \\\$0}}' pom.xml | sed -n '1p' | sed 's/.*<version>\\(.*\\)<\\/version>.*/\\1/'",
-                            returnStdout: true
-                        ).trim()
-                    }
-                    echo "Versión detectada: ${env.VERSION}"
+        steps {
+            script {
+                sh 'ls -l'
+                if (params.MICROSERVICE == 'frontend') {
+                    env.VERSION = sh(
+                        script: "node -pe 'require(\"./package.json\").version'",
+                        returnStdout: true
+                    ).trim()
+                } else if (params.MICROSERVICE == 'backend') {
+                    env.VERSION = sh(
+                        script: "awk '/<artifactId>rh<\\/artifactId>/,/<\\/project>/{if(\\\$0 ~ /<version>/){print \\\$0}}' pom.xml | sed -n '1p' | sed 's/.*<version>\\(.*\\)<\\/version>.*/\\1/'",
+                        returnStdout: true
+                    ).trim()
                 }
+                echo "Versión detectada: ${env.VERSION}"
             }
         }
+    }
 
 
         stage('Construir Imagen') {
