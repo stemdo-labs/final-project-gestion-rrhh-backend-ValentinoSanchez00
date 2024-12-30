@@ -119,12 +119,6 @@ pipeline {
                 }
             }
         }
-        stage('Encender Docker') {
-            steps {
-                sh "systemctl start docker"
-            }
-            
-        }
         stage('Construir Imagen') {
             steps {
                 sh "docker build -t imagen-proyecto-${params.MICROSERVICE}-${params.ENVIRONMENT} ."
