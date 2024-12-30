@@ -1,36 +1,8 @@
 pipeline {
     agent {
         kubernetes {
-            label 'charts-builder'
-            defaultContainer 'tools'
-            yaml """
-                apiVersion: v1
-                kind: Pod
-                spec:
-                containers:
-                    - name: tools
-                    image: ubuntu:22.04
-                    command:
-                        - cat
-                    tty: true
-                    securityContext:
-                        privileged: true
-                    volumeMounts:
-                        - mountPath: "/usr/local/bin"
-                        name: bin-volume
-                        - mountPath: "/home/jenkins/agent"
-                        name: workspace-volume
-                        - mountPath: "/var/lib/docker"
-                        name: docker-volume
-                volumes:
-                    - name: bin-volume
-                    emptyDir: {}
-                    - name: workspace-volume
-                    emptyDir: {}
-                    - name: docker-volume
-                    emptyDir: {}
-                """
-
+            label 'jenkins-jenkins-agent'
+            defaultContainer 'jnlp'
         }
     }  
     environment {
@@ -44,14 +16,14 @@ pipeline {
         stage('Mostrar Configuración') {
             steps {
                 echo "Configuración elegida:"
-                echo "Microservicio: ${params.MICROSERVICE}"
+                echo "Microservicio: ${MICROSERVICE}"
                 echo "Ambiente: ${params.ENVIRONMENT}"
             }
         }
         stage('Test Frontend') {
             when {
                 allOf {
-                    expression { params.MICROSERVICE == 'frontend' }
+                    expression { MICROSERVICE == 'frontend' }
                     expression { params.ENVIRONMENT == 'production' }
                 }
             }
@@ -89,8 +61,20 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    apt-get update && \
-                    apt-get install -y curl bash git docker.io
+                        whoami
+                        apt-get update
+                        apt-get install -y ca-certificates curl
+                        install -m 0755 -d /etc/apt/keyrings
+                        curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+                        chmod a+r /etc/apt/keyrings/docker.asc
+ 
+                        echo \
+                            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+                            $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+                            tee /etc/apt/sources.list.d/docker.list > /dev/null
+                        apt-get update
+ 
+                        apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
                     '''
                 }
             }
@@ -138,7 +122,7 @@ pipeline {
                         ).trim()
                     } else if (params.MICROSERVICE == 'backend') {
                         env.VERSION = sh(
-                            script: "xmllint --xpath \"string(//version)\" pom.xml",
+                            script: "awk '/<artifactId>rh<\/artifactId>/,/<\/project>/{if($0 ~ /<version>/){print $0}}' pom.xml | sed -n '1p' | sed 's/.*<version>\(.*\)<\/version>.*/\1/'",
                             returnStdout: true
                         ).trim()
                     }
