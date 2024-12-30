@@ -101,6 +101,14 @@ pipeline {
                 """
             }
         }
+        stage('Login Docker') {
+            steps {
+                sh """
+                systemctl status docker
+
+                """
+            }
+        }
         stage('Extraer Versión') {
             steps {
                 script {
