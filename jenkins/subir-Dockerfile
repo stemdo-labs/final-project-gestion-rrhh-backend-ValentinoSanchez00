@@ -11,26 +11,26 @@ pipeline {
                     - name: tools
                     image: ubuntu:22.04
                     command:
-                    - cat
+                        - cat
                     tty: true
                     securityContext:
                         privileged: true
                     volumeMounts:
-                    - mountPath: "/usr/local/bin"
+                        - mountPath: "/usr/local/bin"
                         name: bin-volume
-                    - mountPath: "/home/jenkins/agent"
+                        - mountPath: "/home/jenkins/agent"
                         name: workspace-volume
-                    - mountPath: "/var/lib/docker"
+                        - mountPath: "/var/lib/docker"
                         name: docker-volume
                 volumes:
-                - emptyDir: {}
-                    name: bin-volume
-                - emptyDir:
-                    medium: ""
-                    name: workspace-volume
-                - emptyDir: {}
-                    name: docker-volume
+                    - name: bin-volume
+                    emptyDir: {}
+                    - name: workspace-volume
+                    emptyDir: {}
+                    - name: docker-volume
+                    emptyDir: {}
                 """
+
         }
     }  
     environment {
