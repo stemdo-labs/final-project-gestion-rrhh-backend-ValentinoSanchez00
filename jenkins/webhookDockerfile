@@ -40,7 +40,7 @@ pipeline {
                             item.affectedFiles.any { file ->
                                 file.path.endsWith('pom.xml') ||
                                 file.path.endsWith('Dockerfile') ||
-                                
+                                file.path.endsWith('jenkins/webhookDockerfile.groovy')
                             }
                         }
                     } && ENVIRONMENT != ''
