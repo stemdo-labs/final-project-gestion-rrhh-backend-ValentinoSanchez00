@@ -59,7 +59,6 @@ pipeline {
         }
         stage('Preparar Entorno') {
             steps {
-                container('tools') {
                     sh '''
                         apt-get update && apt-get install -y curl bash git docker.io
                         curl -fsSL https://clis.cloud.ibm.com/install/linux | bash
@@ -70,8 +69,9 @@ pipeline {
                         ibmcloud --version
                         ibmcloud plugin list
                     '''
-                }
+                
             }
+        }
         stage('Instalar Herramientas') {
             steps {
                 sh """
