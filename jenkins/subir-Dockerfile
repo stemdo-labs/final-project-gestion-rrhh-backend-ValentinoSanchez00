@@ -38,7 +38,7 @@ pipeline {
         }
         stage('Configurar default.conf') {
             when {
-                expression { params.MICROSERVICE == 'frontend' }
+                expression { MICROSERVICE == 'frontend' }
             }
             steps {
                 script {
@@ -70,19 +70,6 @@ pipeline {
                         ibmcloud plugin list
                     '''
                 
-            }
-        }
-        stage('Instalar Herramientas') {
-            steps {
-                sh """
-                curl -sL https://aka.ms/InstallAzureCLIDeb | bash
-                curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
-                ibmcloud plugin install container-registry -r 'IBM Cloud'
-                ibmcloud plugin install container-service -r 'IBM Cloud'
-                apt-get install -y libxml2-utils
-                apt update && apt upgrade -y
-                dockerd > /var/log/dockerd.log 2>&1 & sleep 10 
-                """
             }
         }
         stage('Login IBM Cloud') {
