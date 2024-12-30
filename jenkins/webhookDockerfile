@@ -31,7 +31,7 @@ pipeline {
                 }
             }
         }
-        stage('Trigger SubirDFB-Vsanchez') {
+        stage('Trigger BuildDockerfile') {
             when {
                 expression {
                     
@@ -48,8 +48,8 @@ pipeline {
             }
             steps {
                 script {
-                    echo "Ejecutando SubirDFB-Vsanchez con entorno ${ENVIRONMENT}..."
-                    build job: 'SubirDFB-Vsanchez',
+                    echo "Ejecutando BuildDockerfile con entorno ${ENVIRONMENT}..."
+                    build job: 'BuildDockerfile',
                     parameters: [
                         string(name: 'MICROSERVICE', value: MICROSERVICE),
                         string(name: 'ENVIRONMENT', value: ENVIRONMENT)
