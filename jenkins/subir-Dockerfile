@@ -101,21 +101,13 @@ pipeline {
                 """
             }
         }
-        stage('Login Docker') {
-            steps {
-                sh """
-                which dockerd
 
-
-                
-
-                """
-            }
-        }
         stage('Extraer Versión') {
         steps {
             script {
                 sh 'ls -l'
+                sh 'cat pom.xml | head -n 20'
+
                 if (params.MICROSERVICE == 'frontend') {
                     env.VERSION = sh(
                         script: "node -pe 'require(\"./package.json\").version'",
