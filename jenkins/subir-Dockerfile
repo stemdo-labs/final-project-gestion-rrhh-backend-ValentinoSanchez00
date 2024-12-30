@@ -122,7 +122,7 @@ pipeline {
                         ).trim()
                     } else if (params.MICROSERVICE == 'backend') {
                         env.VERSION = sh(
-                            script: "awk '/<artifactId>rh<\\/artifactId>/,/<\\/project>/{if(\\$0 ~ /<version>/){print \\$0}}' pom.xml | sed -n '1p' | sed 's/.*<version>\\(.*\\)<\\/version>.*/\\1/'",
+                            script: "awk '/<artifactId>rh<\\/artifactId>/,/<\\/project>/{if(\\\$0 ~ /<version>/){print \\\$0}}' pom.xml | sed -n '1p' | sed 's/.*<version>\\(.*\\)<\\/version>.*/\\1/'",
                             returnStdout: true
                         ).trim()
                     }
@@ -130,6 +130,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Construir Imagen') {
             steps {
