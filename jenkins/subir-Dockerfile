@@ -104,9 +104,8 @@ pipeline {
         stage('Login Docker') {
             steps {
                 sh """
-                docker --version
-                docker info
-                dockerd &
+                ls -la /var/run/docker.sock
+
 
                 
 
