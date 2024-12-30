@@ -6,10 +6,10 @@ pipeline {
         }
     }  
     environment {
-        APIKEY = credentials('IBM_CLOUD_API_KEY_VSANCHEZ') // Define la credencial en Jenkins previamente
+        APIKEY = credentials('IBM_CLOUD_API_KEY_VSANCHEZ') 
+        MICROSERVICE = 'backend'
     }
     parameters {
-        string(name: 'MICROSERVICE', defaultValue: 'backend', description: 'Nombre del microservicio (frontend/backend)')
         string(name: 'ENVIRONMENT', defaultValue: 'develop', description: 'Ambiente de despliegue (develop/production)')
     }
     stages {
@@ -105,7 +105,7 @@ pipeline {
             steps {
                 sh """
                 docker --version
-                docker login -u cr-vsanchez -p ${APIKEY} uk.icr.io
+                
 
                 """
             }
