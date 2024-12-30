@@ -111,21 +111,13 @@ pipeline {
                         ).trim()
                     }
 
-                    // Imprimir la versión detectada
                     echo "Versión detectada: ${env.VERSION}"
                 }
             }
         }
         stage('Construir Imagen') {
             steps {
-                sh "docker build -t imagen-proyecto-${params.MICROSERVICE}-${params.ENVIRONMENT} ."
-            }
-        }
-        stage('Taggear Imagen') {
-            steps {
-                sh """
-                docker tag imagen-proyecto-${params.MICROSERVICE}-${params.ENVIRONMENT} uk.icr.io/cr-vsanchez/imagen-proyecto-${params.MICROSERVICE}-${params.ENVIRONMENT}:${env.VERSION}
-                """
+                sh "docker build -t uk.icr.io/cr-vsanchez/imagen-proyecto-${params.MICROSERVICE}-${params.ENVIRONMENT}:${env.VERSION} ."
             }
         }
         stage('Pushear Imagen') {
