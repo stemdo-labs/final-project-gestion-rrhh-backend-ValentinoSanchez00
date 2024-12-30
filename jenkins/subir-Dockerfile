@@ -119,6 +119,7 @@ pipeline {
                         ).trim()
                     } else if (params.MICROSERVICE == 'backend') {
                         // Extraer versión del archivo pom.xml para backend
+                        echo " extrayendo versión del archivo pom.xml"
                         env.VERSION = sh(
                             script: """
                             awk '/<artifactId>rh<\\/artifactId>/,/<\\/project>/{
