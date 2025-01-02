@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>gm</groupId>
 	<artifactId>rh</artifactId>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>0.0.8-SNAPSHOT</version>
 	<name>rh</name>
 	<description>Sistema de Recursos Humanos</description>
 	<properties>
