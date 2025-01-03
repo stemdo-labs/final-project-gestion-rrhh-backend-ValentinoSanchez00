@@ -1,6 +1,6 @@
 backend:
   replicas: 1
-  image: containerregistryvsanchez.azurecr.io/imagen-proyecto-backend-develop:0.0.4-SNAPSHOT
+  image: icr.io/cr-vsanchez/imagen-proyecto-backend-develop:1.0.8-SNAPSHOT
   containerPort: 8080
   resources:
     requests:
