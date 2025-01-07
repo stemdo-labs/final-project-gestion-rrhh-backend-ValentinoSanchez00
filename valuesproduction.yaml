@@ -1,21 +1,30 @@
 backend:
-  replicas: 1
-  image: icr.io/cr-vsanchez/imagen-proyecto-backend-production:1.1.3-SNAPSHOT
-  containerPort: 8080
+  name: backend  # Nombre del backend
+  replicas: 1  # Número de réplicas
+  namespace: ""
+  image:
+    repository: icr.io/cr-vsanchez/imagen-proyecto-backend-production
+    tag: "0.0.1-SNAPSHOT"
+  port: 8080  # Puerto de la aplicación
+  SPRING_DB_HOST: "10.251.10.34"
+  SPRING_DB_PORT: "5432"
+  SPRING_DB_NAME: "orquestas"
+  SPRING_DB_USER: "vsanchez"
+  SPRING_DB_PASSWORD: "mypassword"
   resources:
     requests:
+      memory: "128Mi"
+      cpu: "250m"
+    limits:
       memory: "256Mi"
       cpu: "500m"
-    limits:
-      memory: "512Mi"
-      cpu: "1000m"
-  env:
-    SPRING_DB_HOST: "10.251.10.34"
-    SPRING_DB_PORT: "5432"
-    SPRING_DB_NAME: "orquestas"
-    SPRING_DB_USER: "vsanchez"
-    SPRING_DB_PASSWORD: "mypassword"
+  readinessProbe:
+    initialDelaySeconds: 50
+    periodSeconds: 10
+  livenessProbe:
+    initialDelaySeconds: 40
+    periodSeconds: 10
   service:
-    port: 8080
+    port: 80
+    targetPort: 8080
     type: ClusterIP
-
