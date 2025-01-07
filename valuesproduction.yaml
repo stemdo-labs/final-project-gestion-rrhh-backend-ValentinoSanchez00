@@ -1,6 +1,6 @@
 backend:
   replicas: 1
-  image: icr.io/cr-vsanchez/imagen-proyecto-backend-production:1.1.0-SNAPSHOT
+  image: icr.io/cr-vsanchez/imagen-proyecto-backend-production:1.1.1-SNAPSHOT
   containerPort: 8080
   resources:
     requests:
